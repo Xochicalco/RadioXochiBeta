@@ -20,7 +20,7 @@ class AudioPlayerWidget extends StatefulWidget {
 
 class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   // late AudioPlayer _audioPlayer;
-  // bool _isPlaying = false;
+  bool _isPlaying = false;
   bool _isOffline = false;
 
   final _playlist = ConcatenatingAudioSource(
@@ -118,7 +118,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     } catch (e) {
       setState(() {
         _isOffline = true;
-        // _isPlaying = false;
+        _isPlaying = false;
       });
       
       _showOfflineMessage();
@@ -166,7 +166,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
             StreamBuilder<PositionData>(
                 stream: _positionDataStream,
                 builder: (context, snapshot) {
-                  final positionData = snapshot.data;
+                  // final positionData = snapshot.data;
                   return ProgressBar(
                     barHeight: 8,
                     baseBarColor: Colors.grey[600],
@@ -176,9 +176,9 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
-                    progress: positionData?.position ?? Duration.zero,
-                    buffered: positionData?.bufferedPosition ?? Duration.zero,
-                    total: const Duration(microseconds: 1), //positionData?.duration ?? Duration.zero,
+                    progress: _isPlaying ? const Duration(milliseconds: 9) : Duration.zero, //positionData?.position ?? Duration.zero,
+                    buffered: const Duration(milliseconds: 9), //positionData?.bufferedPosition ?? Duration.zero,
+                    total: const Duration(milliseconds: 9), //positionData?.duration ?? Duration.zero,
                     onSeek: (position) {} //_audioPlayer.seek,
                   );
                 }),
@@ -199,7 +199,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                     final processingState = playerState?.processingState;
                     final playing = playerState?.playing;
                     if (!(playing ?? false)) {
-                      //_isPlaying = true;                                              
+                      _isPlaying = false;                                              
                       return IconButton(
                         onPressed: _audioPlayer.play,
                         iconSize: 70,
@@ -207,7 +207,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                         icon: const Icon(Icons.play_arrow_rounded),
                       );
                     } else if (processingState != ProcessingState.completed) {
-                      //_isPlaying = false;
+                      _isPlaying = true;
                       return IconButton(
                         onPressed: _audioPlayer.pause,
                         iconSize: 70,

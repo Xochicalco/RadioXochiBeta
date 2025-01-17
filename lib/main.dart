@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:radio_xochicalco_app/widgets/splash.dart';
+import 'package:flutter/services.dart';
+
 
 Future<void> main() async {
   await JustAudioBackground.init(
@@ -8,6 +10,12 @@ Future<void> main() async {
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
   );
+
+  // Bloquea la orientación en modo vertical (portrait)
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // Solo orientación vertical hacia arriba
+  ]);
+  
   runApp(const MyApp());
 }
 
